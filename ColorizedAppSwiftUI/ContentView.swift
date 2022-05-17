@@ -31,7 +31,7 @@ struct ContentView: View {
                     ColorSliderView(value: $blueSliderValue, sliderColor: .blue)
                 }
                 .focused($isTextFieldActive)
-                .keyboardType(.numberPad)
+                .keyboardType(.decimalPad)
                 .toolbar {
                     ToolbarItemGroup(placement: .keyboard) {
                         Button("Up") { }
@@ -93,16 +93,16 @@ struct TextFieldView: View {
     
     var body: some View {
         TextField("", text: $text) { _ in checkValue() }
-            .frame(width: 50)
-            .multilineTextAlignment(.center)
             .textFieldStyle(.roundedBorder)
+            .multilineTextAlignment(.center)
+            .frame(width: 50)
             .alert("Invalid color value", isPresented: $alertPresented, actions: {}) {
                 Text("Please enter value from 0 to 255")
             }
     }
     
     private func checkValue() {
-        if let value = Int(text), (0...255).contains(value) {
+        if let value = Double(text), (0...255).contains(value) {
             self.value = Double(value)
             return
         }
