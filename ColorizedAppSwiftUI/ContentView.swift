@@ -13,7 +13,7 @@ struct ContentView: View {
     @State private var blueSliderValue = Double.random(in: 0...255)
     
     @FocusState private var isTextFieldActive: Bool
-    
+
     var body: some View {
         ZStack {
             Color(white: 0.7)
@@ -34,8 +34,8 @@ struct ContentView: View {
                 .keyboardType(.decimalPad)
                 .toolbar {
                     ToolbarItemGroup(placement: .keyboard) {
-                        Button("Up") { }
-                        Button("Dowm") { }
+                        Button(action: {}) { Image(systemName: "chevron.up") }
+                        Button(action: {}) { Image(systemName: "chevron.down") }
                         Spacer()
                         Button("Done") { isTextFieldActive = false }
                     }
