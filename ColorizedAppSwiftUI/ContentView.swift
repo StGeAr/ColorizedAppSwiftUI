@@ -13,27 +13,55 @@ struct ContentView: View {
     @State private var blueSliderValue: Double = 75
     
     var body: some View {
-        VStack(spacing: 40) {
-            ColorView(
-                redValue: $redSliderValue,
-                greenValue: $greenSliderValue,
-                blueValue: $blueSliderValue
-            )
+        ZStack {
+            Color(white: 0.7)
+                .ignoresSafeArea()
+            VStack(spacing: 40) {
+                ColorView(
+                    redValue: $redSliderValue,
+                    greenValue: $greenSliderValue,
+                    blueValue: $blueSliderValue
+                )
+                HStack {
+                    textLabels
+                    rgbSliders
+                    textFields
+                }
+                Spacer()
+            }
+            .padding()
+        }
+    }
+    
+    private var rgbSliders: some View {
+        VStack {
             ColorSliderView(value: $redSliderValue, sliderColor: .red)
             ColorSliderView(value: $greenSliderValue, sliderColor: .green)
             ColorSliderView(value: $blueSliderValue, sliderColor: .blue)
-            Spacer()
         }
-        .padding()
-            
+    }
+    
+    private var textLabels: some View {
+        VStack(spacing: 15) {
+            TextView(value: $redSliderValue)
+            TextView(value: $greenSliderValue)
+            TextView(value: $blueSliderValue)
+        }
+        .frame(width: 40)
+    }
+    
+    private var textFields: some View {
+        VStack {
+            TextFieldView(value: $redSliderValue)
+            TextFieldView(value: $greenSliderValue)
+            TextFieldView(value: $blueSliderValue)
+        }
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ZStack {
-            Color(white: 0.7)
-                .ignoresSafeArea()
             ContentView()
         }
     }
@@ -61,19 +89,31 @@ struct ColorSliderView: View {
     let sliderColor: Color
     
     var body: some View {
-        HStack {
-            Text("\(lround(value))")
-                .font(.headline)
-                .foregroundColor(.white)
-            Slider(value: $value, in: 0...255, step: 1)
-                .accentColor(sliderColor)
-            TextField("", text: .constant("\(lround(value))"))
-                .padding(EdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8))
-                .font(.headline)
-                .background(.white)
-                .cornerRadius(10)
-                .frame(width: 50)
-                
-        }
+        Slider(value: $value, in: 0...255, step: 1)
+            .accentColor(sliderColor)
+    }
+}
+
+struct TextView: View {
+    @Binding var value: Double
+    
+    var body: some View {
+        Text("\(lround(value))")
+            .font(.title3)
+            .fontWeight(.bold)
+            .foregroundColor(.white)
+    }
+}
+
+struct TextFieldView: View {
+    @Binding var value: Double
+    
+    var body: some View {
+        TextField("", text: .constant("\(lround(value))"))
+            .padding(EdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8))
+            .font(.headline)
+            .background(.white)
+            .cornerRadius(10)
+            .frame(width: 50)
     }
 }
