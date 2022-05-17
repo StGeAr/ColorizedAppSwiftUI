@@ -125,14 +125,28 @@ struct TextView: View {
 }
 
 struct TextFieldView: View {
+    @Binding var text: String
     @Binding var value: Double
     
+    @State private var alertPresented = false
+    
     var body: some View {
-        TextField("", text: .constant("\(lround(value))"))
-            .padding(EdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8))
-            .font(.headline)
-            .background(.white)
-            .cornerRadius(10)
+        TextField("", text: $text) { _ in checkValue() }
             .frame(width: 50)
+            .multilineTextAlignment(.center)
+            .textFieldStyle(.roundedBorder)
+            .keyboardType(.decimalPad)
+            .alert("Wrong Value", isPresented: $alertPresented, actions: {}) {
+                Text("Please enter value from 0 to 255")
+            }
+    }
+    
+    private func checkValue() {
+        if let value = Int(text), (0...255).contains(value) {
+            self.value = Double(value)
+            return
+        }
+        alertPresented.toggle()
+        text = "0"
     }
 }
