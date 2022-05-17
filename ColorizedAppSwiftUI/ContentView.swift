@@ -7,12 +7,6 @@
 
 import SwiftUI
 
-extension ContentView {
-    enum FieldType: Int {
-        case red, green, blue
-    }
-}
-
 struct ContentView: View {
     @State private var redSliderValue = Double.random(in: 0...255)
     @State private var greenSliderValue = Double.random(in: 0...255)
@@ -155,3 +149,10 @@ struct ColorSliderView: View {
         
     }
 }
+
+extension ContentView {
+    enum FieldType: Int {
+        case red, green, blue
+    }
+}
+
