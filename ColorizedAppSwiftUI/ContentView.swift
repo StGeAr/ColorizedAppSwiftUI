@@ -27,48 +27,14 @@ struct ContentView: View {
                     greenValue: greenSliderValue,
                     blueValue: blueSliderValue
                 )
-                HStack {
-                    textLabels
-                    rgbSliders
-                    textFields
+                VStack {
+                    ColorSliderView(value: $redSliderValue, sliderColor: .red)
+                    ColorSliderView(value: $greenSliderValue, sliderColor: .green)
+                    ColorSliderView(value: $blueSliderValue, sliderColor: .blue)
                 }
                 Spacer()
             }
             .padding()
-        }
-    }
-    
-    private var rgbSliders: some View {
-        VStack(spacing: 15) {
-            ColorSliderView(value: $redSliderValue, sliderColor: .red)
-            ColorSliderView(value: $greenSliderValue, sliderColor: .green)
-            ColorSliderView(value: $blueSliderValue, sliderColor: .blue)
-        }
-    }
-    
-    private var textLabels: some View {
-        VStack(spacing: 25) {
-            TextView(value: redSliderValue)
-            TextView(value: greenSliderValue)
-            TextView(value: blueSliderValue)
-        }
-    }
-    
-    private var textFields: some View {
-        VStack {
-            TextFieldView(value: $redSliderValue)
-            TextFieldView(value: $greenSliderValue)
-            TextFieldView(value: $blueSliderValue)
-        }
-        .keyboardType(.decimalPad)
-        .focused($isTextFieldActive)
-        .toolbar {
-            ToolbarItemGroup(placement: .keyboard) {
-                Button("Up") {}
-                Button("Dowm") {}
-                Spacer()
-                Button("Done") { isTextFieldActive = false }
-            }
         }
     }
 }
@@ -98,17 +64,6 @@ struct ColorView: View {
             RoundedRectangle(cornerRadius: 15)
                 .stroke(.white, lineWidth: 5)
         )
-    }
-}
-
-struct ColorSliderView: View {
-    @Binding var value: Double
-    
-    let sliderColor: Color
-    
-    var body: some View {
-        Slider(value: $value, in: 0...255, step: 1)
-            .accentColor(sliderColor)
     }
 }
 
@@ -148,5 +103,24 @@ struct TextFieldView: View {
         }
         alertPresented.toggle()
         text = "0"
+    }
+}
+
+struct ColorSliderView: View {
+    @Binding var value: Double
+    @State private var text = ""
+    
+    let sliderColor: Color
+    
+    var body: some View {
+        HStack {
+            TextView(value: value)
+            Slider(value: $value, in: 0...255, step: 1)
+                .accentColor(sliderColor)
+                .onChange(of: value) { newValue in text = "\(lround(newValue))" }
+                .onAppear { text = "\(lround(value))" }
+            TextFieldView(text: $text, value: $value)
+        }
+        
     }
 }
