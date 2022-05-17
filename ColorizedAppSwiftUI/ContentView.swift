@@ -48,11 +48,10 @@ struct ContentView: View {
     
     private var textLabels: some View {
         VStack(spacing: 25) {
-            TextView(value: $redSliderValue)
-            TextView(value: $greenSliderValue)
-            TextView(value: $blueSliderValue)
+            TextView(value: redSliderValue)
+            TextView(value: greenSliderValue)
+            TextView(value: blueSliderValue)
         }
-        .frame(width: 40)
     }
     
     private var textFields: some View {
@@ -114,13 +113,14 @@ struct ColorSliderView: View {
 }
 
 struct TextView: View {
-    @Binding var value: Double
+    let value: Double
     
     var body: some View {
         Text("\(lround(value))")
             .font(.title3)
             .fontWeight(.bold)
             .foregroundColor(.white)
+            .frame(width: 40)
     }
 }
 
