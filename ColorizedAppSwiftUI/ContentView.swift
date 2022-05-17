@@ -18,9 +18,7 @@ struct ContentView: View {
         ZStack {
             Color(white: 0.7)
                 .ignoresSafeArea()
-                .onTapGesture {
-                    isTextFieldActive = false
-                }
+                .onTapGesture { isTextFieldActive = false }
             VStack(spacing: 40) {
                 ColorView(
                     redValue: redSliderValue,
@@ -31,6 +29,16 @@ struct ContentView: View {
                     ColorSliderView(value: $redSliderValue, sliderColor: .red)
                     ColorSliderView(value: $greenSliderValue, sliderColor: .green)
                     ColorSliderView(value: $blueSliderValue, sliderColor: .blue)
+                }
+                .focused($isTextFieldActive)
+                .keyboardType(.numberPad)
+                .toolbar {
+                    ToolbarItemGroup(placement: .keyboard) {
+                        Button("Up") { }
+                        Button("Dowm") { }
+                        Spacer()
+                        Button("Done") { isTextFieldActive = false }
+                    }
                 }
                 Spacer()
             }
@@ -88,8 +96,7 @@ struct TextFieldView: View {
             .frame(width: 50)
             .multilineTextAlignment(.center)
             .textFieldStyle(.roundedBorder)
-            .keyboardType(.decimalPad)
-            .alert("Wrong Value", isPresented: $alertPresented, actions: {}) {
+            .alert("Invalid color value", isPresented: $alertPresented, actions: {}) {
                 Text("Please enter value from 0 to 255")
             }
     }
@@ -101,6 +108,7 @@ struct TextFieldView: View {
         }
         alertPresented.toggle()
         text = "0"
+        value = 0
     }
 }
 
