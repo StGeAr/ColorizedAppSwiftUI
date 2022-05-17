@@ -8,19 +8,24 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var redSliderValue: Double = 150
-    @State private var greenSliderValue: Double = 100
-    @State private var blueSliderValue: Double = 75
+    @State private var redSliderValue = Double.random(in: 0...255)
+    @State private var greenSliderValue = Double.random(in: 0...255)
+    @State private var blueSliderValue = Double.random(in: 0...255)
+    
+    @FocusState private var isTextFieldActive: Bool
     
     var body: some View {
         ZStack {
             Color(white: 0.7)
                 .ignoresSafeArea()
+                .onTapGesture {
+                    isTextFieldActive = false
+                }
             VStack(spacing: 40) {
                 ColorView(
-                    redValue: $redSliderValue,
-                    greenValue: $greenSliderValue,
-                    blueValue: $blueSliderValue
+                    redValue: redSliderValue,
+                    greenValue: greenSliderValue,
+                    blueValue: blueSliderValue
                 )
                 HStack {
                     textLabels
@@ -34,7 +39,7 @@ struct ContentView: View {
     }
     
     private var rgbSliders: some View {
-        VStack {
+        VStack(spacing: 15) {
             ColorSliderView(value: $redSliderValue, sliderColor: .red)
             ColorSliderView(value: $greenSliderValue, sliderColor: .green)
             ColorSliderView(value: $blueSliderValue, sliderColor: .blue)
@@ -42,7 +47,7 @@ struct ContentView: View {
     }
     
     private var textLabels: some View {
-        VStack(spacing: 15) {
+        VStack(spacing: 25) {
             TextView(value: $redSliderValue)
             TextView(value: $greenSliderValue)
             TextView(value: $blueSliderValue)
@@ -56,6 +61,16 @@ struct ContentView: View {
             TextFieldView(value: $greenSliderValue)
             TextFieldView(value: $blueSliderValue)
         }
+        .keyboardType(.decimalPad)
+        .focused($isTextFieldActive)
+        .toolbar {
+            ToolbarItemGroup(placement: .keyboard) {
+                Button("Up") {}
+                Button("Dowm") {}
+                Spacer()
+                Button("Done") { isTextFieldActive = false }
+            }
+        }
     }
 }
 
@@ -68,18 +83,22 @@ struct ContentView_Previews: PreviewProvider {
 }
 
 struct ColorView: View {
-    @Binding var redValue: Double
-    @Binding var greenValue: Double
-    @Binding var blueValue: Double
+    let redValue: Double
+    let greenValue: Double
+    let blueValue: Double
     
     var body: some View {
-        Color(red: redValue / 255, green: greenValue / 255, blue: blueValue / 255)
-            .frame(height: 150)
-            .clipShape(RoundedRectangle(cornerRadius: 15))
-            .overlay(
-                RoundedRectangle(cornerRadius: 15)
-                    .stroke(.white, lineWidth: 5)
-            )
+        Color(
+            red: redValue / 255,
+            green: greenValue / 255,
+            blue: blueValue / 255
+        )
+        .frame(height: 150)
+        .cornerRadius(15)
+        .overlay(
+            RoundedRectangle(cornerRadius: 15)
+                .stroke(.white, lineWidth: 5)
+        )
     }
 }
 
