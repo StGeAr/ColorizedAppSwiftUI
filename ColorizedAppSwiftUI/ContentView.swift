@@ -7,12 +7,19 @@
 
 import SwiftUI
 
+extension ContentView {
+    enum FieldType: Int {
+        case red, green, blue
+    }
+}
+
 struct ContentView: View {
     @State private var redSliderValue = Double.random(in: 0...255)
     @State private var greenSliderValue = Double.random(in: 0...255)
     @State private var blueSliderValue = Double.random(in: 0...255)
     
     @FocusState private var isTextFieldActive: Bool
+    @FocusState var focusedField: FieldType?
 
     var body: some View {
         ZStack {
@@ -27,15 +34,22 @@ struct ContentView: View {
                 )
                 VStack {
                     ColorSliderView(value: $redSliderValue, sliderColor: .red)
+                        .focused($focusedField, equals: .red)
                     ColorSliderView(value: $greenSliderValue, sliderColor: .green)
+                        .focused($focusedField, equals: .green)
                     ColorSliderView(value: $blueSliderValue, sliderColor: .blue)
+                        .focused($focusedField, equals: .blue)
                 }
                 .focused($isTextFieldActive)
                 .keyboardType(.decimalPad)
                 .toolbar {
                     ToolbarItemGroup(placement: .keyboard) {
-                        Button(action: {}) { Image(systemName: "chevron.up") }
-                        Button(action: {}) { Image(systemName: "chevron.down") }
+                        Button(action: moveUp) {
+                            Image(systemName: "chevron.up")
+                        }.disabled(focusedField == .red ? true : false)
+                        Button(action: moveDown) {
+                            Image(systemName: "chevron.down")
+                        }.disabled(focusedField == .blue ? true : false)
                         Spacer()
                         Button("Done") { isTextFieldActive = false }
                     }
@@ -43,6 +57,17 @@ struct ContentView: View {
                 Spacer()
             }
             .padding()
+        }
+    }
+    
+    private func moveUp() {
+        focusedField = focusedField.map {
+            FieldType(rawValue: $0.rawValue - 1) ?? .red
+        }
+    }
+    private func moveDown() {
+        focusedField = focusedField.map {
+            FieldType(rawValue: $0.rawValue + 1) ?? .blue
         }
     }
 }
